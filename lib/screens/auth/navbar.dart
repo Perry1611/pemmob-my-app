@@ -21,7 +21,62 @@ class _NavbarState extends State<Navbar> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
       bottomNavigationBar: BottomAppBar(
-
+        color: Colors.white,
+        child: Container(
+          height: 60,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  MaterialButton(
+                    minWidth: 40,
+                    onPressed: (){},
+                    child: Column(
+                      children: [
+                        Icon(Icons.home_outlined),
+                        Text("Home")
+                      ],
+                    ),
+                  ),
+                  MaterialButton(
+                    onPressed: (){},
+                    child: Column(
+                      children: [
+                        Icon(Icons.home_outlined),
+                        Text("Home")
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  MaterialButton(
+                    onPressed: (){},
+                    child: Column(
+                      children: [
+                        Icon(Icons.home_outlined),
+                        Text("Home")
+                      ],
+                    ),
+                  ),
+                  MaterialButton(
+                    onPressed: (){},
+                    child: Column(
+                      children: [
+                        Icon(Icons.home_outlined),
+                        Text("Home")
+                      ],
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
