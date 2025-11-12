@@ -94,15 +94,18 @@ class _NavbarState extends State<Navbar> {
   }
 
   Widget _buildNavItem(String title, IconData icon, int index) {
+    final isSelected = _selectedIndex == index;
+    final color = isSelected ? Colors.green:Colors.grey;
     return MaterialButton(
       minWidth: 40,
       onPressed: () => _onTabTapper(index),
       child: Column(
           children: [
-            Icon(icon, size: 30,),
+            Icon(icon, size: 30, color: color,),
             Text(title,
               style: TextStyle(
-                  fontSize: 15
+                  fontSize: 15,
+                  color: color
               ),
             )
           ]
