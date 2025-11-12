@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
-
+import 'package:my_app/screens/auth/profile.dart';
+import 'package:my_app/screens/beranda.dart';
+import 'package:my_app/screens/jelajahi.dart';
+import 'package:my_app/screens/auth/profile.dart';
+import 'package:my_app/screens/tugas.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Navbar extends StatefulWidget {
   const Navbar({super.key});
@@ -9,6 +14,21 @@ class Navbar extends StatefulWidget {
 }
 
 class _NavbarState extends State<Navbar> {
+  int _selectedIndex = 0;
+
+  final List<Widget> _screens = [
+    BerandaScreen(),
+    JelajahiScreen(),
+    TugasScreen(),
+    ProfileScreen(),
+  ];
+
+  void _onTabTapper(int index){
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +36,20 @@ class _NavbarState extends State<Navbar> {
           width: 70,
           height: 70,
           child: FloatingActionButton(
-            onPressed: () {},
+            onPressed: () async {
+              var status = await Permission.camera.request();
+
+              if(status.isGranted){
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Kamera diberi izin'))
+                );
+              }
+              else if (status.isDenied){
+                await Permission.camera.request();
+              } else if (status.isPermanentlyDenied){
+                openAppSettings();
+              }
+            },
             shape: CircleBorder(),
             backgroundColor: Colors.yellow,
             tooltip: "E-Scan",
@@ -52,14 +85,18 @@ class _NavbarState extends State<Navbar> {
                 ]
             ),
           ),
-        )
+        ),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _screens,
+      ),
     );
   }
 
   Widget _buildNavItem(String title, IconData icon, int index) {
     return MaterialButton(
       minWidth: 40,
-      onPressed: () {},
+      onPressed: () => _onTabTapper(index),
       child: Column(
           children: [
             Icon(icon, size: 30,),
