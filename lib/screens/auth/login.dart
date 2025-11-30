@@ -1,10 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/service/auth_service.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
+  // 2. Buat fungsi untuk menangani login
+  void _handleGoogleSignIn() async {
+    final authService = AuthService();
+    try {
+      final user = await authService.signInWithGoogle();
+
+      if (user != null) {
+        // Login berhasil!
+        print("Login Berhasil: ${user.email}");
+      } else {
+        // Login dibatalkan / gagal
+        print("Login dibatalkan oleh user.");
+      }
+    } catch (e) {
+      // Tampilkan error
+      print("Error: ${e}");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -13,7 +34,11 @@ class LoginScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image.asset('lib/assets/images/login-ornament-top.png'),
+            Image.asset(
+              'lib/assets/images/login-ornament-top.png',
+              width: size.width,
+              fit: BoxFit.fitWidth,
+            ),
             Column(
               children: [
                 Image.asset('lib/assets/images/logo-login.png'),
@@ -86,7 +111,7 @@ class LoginScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: _handleGoogleSignIn,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xffffffff),
                     ),
@@ -107,7 +132,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16,),
+                const SizedBox(height: 16),
                 Container(
                   width: 372,
                   height: 57,
@@ -139,7 +164,11 @@ class LoginScreen extends StatelessWidget {
                 ),
               ],
             ),
-            Image.asset('lib/assets/images/login-ornament-bottom.png'),
+            Image.asset(
+              'lib/assets/images/login-ornament-bottom.png',
+              width: size.width,
+              fit: BoxFit.fitWidth,
+            ),
           ],
         ),
       ),

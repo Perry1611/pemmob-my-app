@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/components/profile_widget/menu_list.dart';
+import 'package:my_app/screens/auth/item_list.dart';
+import 'package:my_app/service/auth_service.dart';
 
 class ProfileScreen extends StatelessWidget{
   const ProfileScreen({super.key});
@@ -146,9 +148,19 @@ class ProfileScreen extends StatelessWidget{
                                   image: 'lib/assets/images/history.png'
                               ),
                               const SizedBox(height: 10,),
-                              MenuList(
-                                  title: 'Tugas',
-                                  image: 'lib/assets/images/assignment.png'
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ItemListScreen()
+                                    )
+                                  );
+                                },
+                                child: MenuList(
+                                    title: 'Tugas',
+                                    image: 'lib/assets/images/assignment.png'
+                                ),
                               ),
                               const SizedBox(height: 10,),
                               MenuList(
@@ -179,6 +191,14 @@ class ProfileScreen extends StatelessWidget{
                               MenuList(
                                   title: 'Pusat Bantuan',
                                   image: 'lib/assets/images/qmark.png'
+                              ),
+                              const SizedBox(height: 10,),
+                              InkWell(
+                                onTap: () async => await AuthService().signOut(),
+                                child: MenuList(
+                                    title: 'Logout',
+                                    image: 'lib/assets/images/logout.png'
+                                ),
                               ),
                             ],
                           ),
