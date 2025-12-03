@@ -15,14 +15,19 @@ class _ItemListScreenState extends State<ItemListScreen> {
 
   final TextEditingController _pointController = TextEditingController();
 
-  void _showDialog() {
-    _nameController.clear();
-    _pointController.clear();
+  void _showDialog({Item? item}) {
+    if(item != null){
+      _nameController.text = item.name;
+      _pointController.text = item.point.toString();
+    } else {
+      _nameController.clear();
+      _pointController.clear();
+    }
 
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Tambah data'),
+          title: Text(item == null ? 'Tambah Data' : 'Edit Data'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -51,12 +56,39 @@ class _ItemListScreenState extends State<ItemListScreen> {
                   final int point = int.tryParse(_pointController.text) ?? 0;
 
                   if (name.isNotEmpty){
-                    _firestoreService.addItem(name, point);
-
+                    if (item == null){
+                      _firestoreService.addItem(name, point);
+                    } else {
+                      _firestoreService.updateItem(item.id, name, point);
+                    }
                     Navigator.pop(context);
                   }
                 },
                 child: Text('Simpan'),
+            )
+          ],
+        )
+    );
+  }
+
+  void _showDeleteConfirmation(String id, String name){
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Hapus Item?'),
+          content: Text("Apakah anda yakin ingin menghapus $name?, data tidak dapat dikembalikan"),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Batal')
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  _firestoreService.deleteItem(id);
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                child: const Text('Hapus', style: TextStyle(color: Colors.white),),
             )
           ],
         )
@@ -124,14 +156,24 @@ class _ItemListScreenState extends State<ItemListScreen> {
                     subtitle: Text(
                       item.id,
                     ),
-                    trailing: Text(
-                      '${item.point} Poin',
-                      style: TextStyle(
-                        color: Colors.green[700],
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600
-                      ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '${item.point} Poin',
+                          style: TextStyle(
+                              color: Colors.green[700],
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => _showDeleteConfirmation(item.id, item.name),
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                        ),
+                      ],
                     ),
+                    onTap: () => _showDialog(item: item),
                   ),
                 );
               },
